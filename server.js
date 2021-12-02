@@ -21,6 +21,13 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
 
+app.get("/", (req, res) => {
+  res.json({
+    message: "Success -> server is up",
+    content: `Welcome to Splash Store E-commerce application API`,
+  });
+});
+
 // Route Imports:
 const productRouter = require("./routes/productRoutes");
 const userRouter = require("./routes/userRoutes");
