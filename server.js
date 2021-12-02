@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config/config.env" });
 const express = require("express");
+const cors = require("cors");
 const cloudinary = require("cloudinary");
 const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.json({
