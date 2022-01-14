@@ -4,17 +4,29 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 
 const isAuthenticatedUser = catchAsyncError(async (req, res, next) => {
-  const { token } = req.cookies;
+  let token;
 
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith(`Bearer`)
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1];
+
+      // decode token id
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      req.user = await User.findById(decoded.id).select("-password");
+      next();
+    } catch (error) {
+      return next(
+        new ErrorHandler(`Not Authorized, token falied ${error}`, 401)
+      );
+    }
+  }
   if (!token) {
     return next(new ErrorHandler("Please login to access this resource", 401));
   }
-
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-  req.user = await User.findById(decoded.id);
-
-  next();
 });
 
 const authorizedRoles = (...roles) => {

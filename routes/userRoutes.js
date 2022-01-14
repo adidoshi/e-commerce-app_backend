@@ -2,7 +2,6 @@ const express = require("express");
 const {
   registerUser,
   loginUser,
-  logout,
   forgotPassword,
   resetPassword,
   getUserDetails,
@@ -29,8 +28,6 @@ router.route("/password/update").put(isAuthenticatedUser, updatePassword);
 router.route("/me").get(isAuthenticatedUser, getUserDetails);
 
 router.route("/profile/update").put(isAuthenticatedUser, updateProfile);
-
-router.route("/logout").get(logout);
 
 router
   .route("/admin/allusers")

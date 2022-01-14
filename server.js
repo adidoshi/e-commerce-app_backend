@@ -2,12 +2,17 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config/config.env" });
 const express = require("express");
 const cors = require("cors");
+const logger = require("morgan");
 const cloudinary = require("cloudinary");
 const fileUpload = require("express-fileupload");
-const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 4000;
 const errorMiddleware = require("./middleware/error");
-const bodyParser = require("body-parser");
+const connectDB = require("./config/database");
+// Route Imports:
+const productRouter = require("./routes/productRoutes");
+const userRouter = require("./routes/userRoutes");
+const orderRouter = require("./routes/orderRoutes");
+const paymentRouter = require("./routes/paymentRoutes");
 
 // Handling uncaught exception
 process.on("uncaughtException", (err) => {
@@ -16,19 +21,14 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
+// middlewares
 const app = express();
 app.use(express.json());
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(logger("tiny"));
 app.use(fileUpload());
-app.set("trust proxy", 1);
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
+app.use(cors());
 
+// Initial route
 app.get("/", (req, res) => {
   res.json({
     message: "Success -> server is up",
@@ -36,14 +36,7 @@ app.get("/", (req, res) => {
   });
 });
 
-// Route Imports:
-const productRouter = require("./routes/productRoutes");
-const userRouter = require("./routes/userRoutes");
-const orderRouter = require("./routes/orderRoutes");
-const paymentRouter = require("./routes/paymentRoutes");
-
 // connect DB:
-const connectDB = require("./config/database");
 connectDB();
 
 cloudinary.config({
