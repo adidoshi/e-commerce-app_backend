@@ -73,7 +73,7 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 
   // Get resetPassword Token
   const resetToken = user.getResetPasswordToken();
-  await user.save({ validateBeforeSave: false });
+  await user.save();
 
   const resetPasswordUrl = `http://localhost:3000/password/reset/${resetToken}`;
   const message = `
@@ -91,7 +91,7 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
       subject: `Splash Store Password Recovery`,
       text: message,
     });
-
+    res.header("Access-Control-Allow-Origin", "*");
     res.status(200).json({
       success: true,
       message: `Email sent to ${user.email} successfully`,
@@ -100,7 +100,7 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
-    await user.save({ validateBeforeSave: false });
+    await user.save();
 
     return next(new ErrorHandler(error.message), 500);
   }
