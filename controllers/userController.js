@@ -137,7 +137,9 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
 
   await user.save();
 
-  return res.status(201).json("Password Reset success");
+  return res
+    .status(201)
+    .json({ success: true, message: "Password Reset success" });
 });
 
 // Get user details - profile
