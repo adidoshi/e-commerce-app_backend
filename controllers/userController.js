@@ -75,7 +75,7 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
   const resetToken = user.getResetPasswordToken();
   await user.save();
 
-  const resetPasswordUrl = `http://localhost:3000/password/reset/${resetToken}`;
+  const resetPasswordUrl = `https://splashstore.netlify.app/password/reset/${resetToken}`;
   const message = `
   <h1>Hey ${user.name}!, you have requested a password reset</h1>
   <p>Please go to this link to reset your password</p>
