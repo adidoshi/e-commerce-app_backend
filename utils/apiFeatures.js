@@ -39,7 +39,7 @@ class ApiFeatures {
 
     const skip = resultPerPage * (currentPage - 1);
 
-    this.queryStr = this.query.limit(resultPerPage).skip(skip);
+    this.query = this.query.limit(resultPerPage).skip(skip);
 
     return this;
   }
